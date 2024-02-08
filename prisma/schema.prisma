@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+model Customer {
+  id      Int      @id @default(autoincrement())
+}
+
+model OrderItem {
+  id      Int      @id @default(autoincrement())
+}
+
+model DelivryMan {
+  id      Int      @id @default(autoincrement())
+}
+
+model Restaurant {
+  id      Int      @id @default(autoincrement())
+  card Card?
+}
+
+model Card {
+  id     Int  @id @default(autoincrement())
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int @unique
+  menu Menu[]
+  dish Dish[]
+}
+
+model Menu {
+  id     Int @id @default(autoincrement())
+  card    Card @relation(fields: [cardId], references: [id])
+  cardId Int
+  dishes DishOnMenu[]
+}
+
+model Dish{
+  id     Int @id @default(autoincrement())
+  card    Card @relation(fields: [cardId], references: [id])
+  cardId Int
+  menus DishOnMenu[]
+}
+
+model DishOnMenu {
+  menu       Menu     @relation(fields: [menuId], references: [id])
+  menuId     Int 
+  dish   Dish @relation(fields: [dishId], references: [id])
+  dishId Int
+  @@id([menuId, dishId])
+}
+

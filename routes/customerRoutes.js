@@ -3,7 +3,7 @@ const customerController = require('../controllers/customerController');
 const router = express.Router();
 
 // Endpoint GET /api/customers
-router.get('/customers', customerController.test);
+router.get('/customers', customerController.creerCustomer);
 
 
 // Endpoint GET /api/customers/:id
