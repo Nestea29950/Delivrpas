@@ -13,19 +13,39 @@ datasource db {
 // schema.prisma
 model Customer {
   id      Int      @id @default(autoincrement())
+  name    String
+  users user?
+  deliveries Delivery[]
 }
 
-model OrderItem {
-  id      Int      @id @default(autoincrement())
-}
 
-model DelivryMan {
+model DeliveryMan {
   id      Int      @id @default(autoincrement())
+  name    String
+  users user?
+  deliveries Delivery[]
 }
 
 model Restaurant {
-  id      Int      @id @default(autoincrement())
-  card Card?
+  id            Int      @id @default(autoincrement())
+  email         String
+  password      String
+  name          String
+  adressePostal Int
+  card          Card?
+  users         user?
+  deliveries    Delivery[]
+}
+
+
+model user {
+  DeliveryMan      DeliveryMan   @relation(fields: [deliveryManId], references: [id])
+  deliveryManId    Int @unique
+  customer        Customer      @relation(fields: [customerId], references: [id])
+  customerId      Int @unique
+  restaurant      Restaurant    @relation(fields: [restaurantId], references: [id])
+  restaurantId    Int @unique
+  
 }
 
 model Card {
@@ -41,6 +61,8 @@ model Menu {
   card    Card @relation(fields: [cardId], references: [id])
   cardId Int
   dishes DishOnMenu[]
+  orderitem  OrderItem @relation(fields: [orderId], references: [id])
+  orderId Int
 }
 
 model Dish{
@@ -48,6 +70,8 @@ model Dish{
   card    Card @relation(fields: [cardId], references: [id])
   cardId Int
   menus DishOnMenu[]
+  orderitem  OrderItem @relation(fields: [orderId], references: [id])
+  orderId Int
 }
 
 model DishOnMenu {
@@ -58,3 +82,21 @@ model DishOnMenu {
   @@id([menuId, dishId])
 }
 
+model OrderItem {
+  id  Int @id @default(autoincrement())
+  menu Menu[]
+  dish Dish[]
+  delivery Delivery[]
+}
+
+model Delivery {
+  id          Int       @id @default(autoincrement())
+  deliveryMan DeliveryMan @relation(fields: [deliveryManId], references: [id])
+  deliveryManId Int
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  customerId  Int
+  restaurant  Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  orderitem  OrderItem @relation(fields: [orderitemId], references: [id])
+  orderitemId Int
+}
