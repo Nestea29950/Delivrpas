@@ -14,7 +14,7 @@ datasource db {
 model Customer {
   id      Int      @id @default(autoincrement())
   name    String
-  users user?
+  users User?
   deliveries Delivery[]
 }
 
@@ -22,7 +22,7 @@ model Customer {
 model DeliveryMan {
   id      Int      @id @default(autoincrement())
   name    String
-  users user?
+  users User?
   deliveries Delivery[]
 }
 
@@ -33,12 +33,12 @@ model Restaurant {
   name          String
   adressePostal Int
   card          Card?
-  users         user?
+  users         User?
   deliveries    Delivery[]
 }
 
 
-model user {
+model User {
   DeliveryMan      DeliveryMan   @relation(fields: [deliveryManId], references: [id])
   deliveryManId    Int @unique
   customer        Customer      @relation(fields: [customerId], references: [id])
