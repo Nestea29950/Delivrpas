@@ -16,15 +16,21 @@ exports.postRestaurants = async (req, res) => {
     // Extraire les données du corps de la requête
     const { email, password, name, adressePostal } = req.body;
    
-
     // Créer le restaurant avec les données fournies
     const newRestaurant = await prisma.restaurant.create({
       data: {
         email,
         password,
         name,
-        adressePostal
-        // Vous pouvez ajouter d'autres champs ici si nécessaire
+        adressePostal,
+        // Créer également la carte associée au restaurant
+        card: {
+          create: {}
+        }
+      },
+      // Inclure la création de la carte dans la transaction
+      include: {
+        card: true
       }
     });
 
@@ -36,9 +42,46 @@ exports.postRestaurants = async (req, res) => {
 };
 
 
+
 exports.putRestaurants = async (req, res) => {
-  // Logique de création d'un customer
-  res.send('bonjour')
+  try {
+    const { id } = req.params; // Récupérer l'ID du restaurant à mettre à jour
+    const { email, password, name, adressePostal, carte } = req.body; // Extraire les données du corps de la requête
+
+    // Vérifier si le restaurant existe dans la base de données
+    const existingRestaurant = await prisma.restaurant.findUnique({
+      where: { id: parseInt(id) }
+    });
+
+    if (!existingRestaurant) {
+      return res.status(404).json({ message: 'Restaurant non trouvé pour l\'ID fourni' });
+    }
+
+    // Mettre à jour le restaurant avec les données fournies
+    const updatedRestaurant = await prisma.restaurant.update({
+      where: { id: parseInt(id) },
+      data: {
+        email,
+        password,
+        name,
+        adressePostal,
+        card: {
+          create: carte.menu.map(menu => ({
+            dishes: {
+              create: menu.dishes ? menu.dishes.map(dish => ({
+                name: dish.name,
+              })) : []
+            }
+          }))
+        }
+      }
+    });
+
+    res.json(updatedRestaurant);
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du restaurant :', error);
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du restaurant' });
+  }
 };
 
 
@@ -47,6 +90,13 @@ exports.deleteRestaurants = async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
+
+    // Supprimer la carte associée au restaurant
+    await prisma.card.deleteMany({
+      where: { restaurantId: id }
+    });
+
+    // Supprimer le restaurant lui-même
     await prisma.restaurant.delete({
       where: { id }
     });
@@ -57,4 +107,7 @@ exports.deleteRestaurants = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la suppression du restaurant' });
   }
 };
+
+
+
 

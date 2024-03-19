@@ -58,20 +58,21 @@ model Card {
 
 model Menu {
   id     Int @id @default(autoincrement())
+  nom String
   card    Card @relation(fields: [cardId], references: [id])
   cardId Int
   dishes DishOnMenu[]
-  orderitem  OrderItem @relation(fields: [orderId], references: [id])
-  orderId Int
+  orderitem  OrderItem[]
 }
 
 model Dish{
   id     Int @id @default(autoincrement())
   card    Card @relation(fields: [cardId], references: [id])
   cardId Int
+  nom     String  @default("") 
   menus DishOnMenu[]
-  orderitem  OrderItem @relation(fields: [orderId], references: [id])
-  orderId Int
+  orderitem  OrderItem[]
+  
 }
 
 model DishOnMenu {
@@ -84,9 +85,13 @@ model DishOnMenu {
 
 model OrderItem {
   id  Int @id @default(autoincrement())
-  menu Menu[]
-  dish Dish[]
+  
+    dish       Dish     @relation(fields: [dishId], references: [id])
+  menu       Menu     @relation(fields: [menuId], references: [id])
+  menuId Int
+  dishId Int
   delivery Delivery[]
+  
 }
 
 model Delivery {

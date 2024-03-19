@@ -15,8 +15,6 @@ exports.putdeliveries = async (req, res) => {
   res.send('bonjour')
 };
 
-
-
 exports.deletedeliveries = async (req, res) => {
   try {
     let { id } = req.params;

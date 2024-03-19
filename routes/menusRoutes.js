@@ -3,9 +3,9 @@ const menusController = require('../controllers/menusController');
 const router = express.Router();
 
 
-// Endpoint Menusff
+// Endpoint Menus
 router.get('/menus', menusController.getmenus);
-router.post('/menus/:id', menusController.postmenus);
+router.post('/menus', menusController.postmenus);
 router.put('/menus/:id', menusController.putmenus);
 router.delete('/menus/:id', menusController.deletemenus);
 
