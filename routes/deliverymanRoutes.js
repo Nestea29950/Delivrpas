@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Endpoint Menus
 router.get('/deliveryman', deliverymanController.getdeliveryman);
-router.post('/deliveryman/:id', deliverymanController.postdeliveryman);
+router.post('/deliveryman', deliverymanController.postdeliveryman);
 router.put('/deliveryman/:id', deliverymanController.putdeliveryman);
 router.delete('/deliveryman/:id', deliverymanController.deletedeliveryman);
 

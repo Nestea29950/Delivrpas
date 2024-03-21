@@ -1,0 +1,218 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "API de Delivrpas",
+      "description": "Documentation de l'API de gestion Delivrpas"
+    },
+    "paths": {
+      "/api/customers": {
+        "get": {
+          "summary": "Obtenir tous les clients",
+          "responses": {
+            "200": {
+              "description": "Succès"
+            }
+          }
+        },
+        "post": {
+          "summary": "Créer un nouveau client",
+          "responses": {
+            "201": {
+              "description": "Créé avec succès"
+            }
+          }
+        }
+      },
+      "/api/customers/{id}": {
+        "put": {
+          "summary": "Mettre à jour un client existant",
+          "responses": {
+            "200": {
+              "description": "Mis à jour avec succès"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Supprimer un client existant",
+          "responses": {
+            "200": {
+              "description": "Supprimé avec succès"
+            }
+          }
+        }
+      },
+      "/api/deliveries": {
+        "get": {
+          "summary": "Obtenir toutes les livraisons",
+          "responses": {
+            "200": {
+              "description": "Succès"
+            }
+          }
+        },
+        "post": {
+          "summary": "Créer une nouvelle livraison",
+          "responses": {
+            "201": {
+              "description": "Créé avec succès"
+            }
+          }
+        }
+      },
+      "/api/deliveries/{id}": {
+        "delete": {
+          "summary": "Supprimer une livraison existante",
+          "responses": {
+            "200": {
+              "description": "Supprimé avec succès"
+            }
+          }
+        }
+      },
+      "/api/deliveryman": {
+        "get": {
+          "summary": "Obtenir tous les livreurs",
+          "responses": {
+            "200": {
+              "description": "Succès"
+            }
+          }
+        },
+        "post": {
+          "summary": "Créer un nouveau livreur",
+          "responses": {
+            "201": {
+              "description": "Créé avec succès"
+            }
+          }
+        }
+      },
+      "/api/deliveryman/{id}": {
+        "put": {
+          "summary": "Mettre à jour un livreur existant",
+          "responses": {
+            "200": {
+              "description": "Mis à jour avec succès"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Supprimer un livreur existant",
+          "responses": {
+            "200": {
+              "description": "Supprimé avec succès"
+            }
+          }
+        }
+      },
+      "/api/dishes": {
+        "get": {
+          "summary": "Obtenir tous les plats",
+          "responses": {
+            "200": {
+              "description": "Succès"
+            }
+          }
+        },
+        "post": {
+          "summary": "Créer un nouveau plat",
+          "responses": {
+            "201": {
+              "description": "Créé avec succès"
+            }
+          }
+        }
+      },
+      "/api/dishes/{id}": {
+        "put": {
+          "summary": "Mettre à jour un plat existant",
+          "responses": {
+            "200": {
+              "description": "Mis à jour avec succès"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Supprimer un plat existant",
+          "responses": {
+            "200": {
+              "description": "Supprimé avec succès"
+            }
+          }
+        }
+      },
+      "/api/menus": {
+        "get": {
+          "summary": "Obtenir tous les menus",
+          "responses": {
+            "200": {
+              "description": "Succès"
+            }
+          }
+        },
+        "post": {
+          "summary": "Créer un nouveau menu",
+          "responses": {
+            "201": {
+              "description": "Créé avec succès"
+            }
+          }
+        }
+      },
+      "/api/menus/{id}": {
+        "put": {
+          "summary": "Mettre à jour un menu existant",
+          "responses": {
+            "200": {
+              "description": "Mis à jour avec succès"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Supprimer un menu existant",
+          "responses": {
+            "200": {
+              "description": "Supprimé avec succès"
+            }
+          }
+        }
+      },
+      "/api/restaurants": {
+        "get": {
+          "summary": "Obtenir tous les restaurants",
+          "responses": {
+            "200": {
+              "description": "Succès"
+            }
+          }
+        },
+        "post": {
+          "summary": "Créer un nouveau restaurant",
+          "responses": {
+          "201": {
+          "description": "Créé avec succès"
+          }
+          }
+          }
+          },
+          "/api/restaurants/{id}": {
+          "put": {
+          "summary": "Mettre à jour un restaurant existant",
+          "responses": {
+          "200": {
+          "description": "Mis à jour avec succès"
+          }
+          }
+          },
+          "delete": {
+          "summary": "Supprimer un restaurant existant",
+          "responses": {
+          "200": {
+          "description": "Supprimé avec succès"
+          }
+          }
+          }
+          }
+          }
+          }  
