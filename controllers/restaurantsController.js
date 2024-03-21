@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10; 
 exports.getRestaurants = async (req, res) => {
   try {
     const restaurants = await prisma.restaurant.findMany();
@@ -15,26 +16,34 @@ exports.postRestaurants = async (req, res) => {
   try {
     // Extraire les données du corps de la requête
     const { email, password, name, adressePostal } = req.body;
-   
-    // Créer le restaurant avec les données fournies
-    const newRestaurant = await prisma.restaurant.create({
-      data: {
-        email,
-        password,
-        name,
-        adressePostal,
-        // Créer également la carte associée au restaurant
-        card: {
-          create: {}
-        }
-      },
-      // Inclure la création de la carte dans la transaction
-      include: {
-        card: true
+    
+    // Générer un sel et hacher le mot de passe
+    bcrypt.hash(password, saltRounds, async (err, hash) => {
+      if (err) {
+        console.error('Erreur lors du hachage du mot de passe :', err);
+        throw new Error('Erreur lors du hachage du mot de passe');
       }
-    });
 
-    res.status(201).json(newRestaurant);
+      // Créer le restaurant avec le mot de passe haché
+      const newRestaurant = await prisma.restaurant.create({
+        data: {
+          email,
+          password: hash, // Utilisation du hash du mot de passe
+          name,
+          adressePostal,
+          // Créer également la carte associée au restaurant
+          card: {
+            create: {}
+          }
+        },
+        // Inclure la création de la carte dans la transaction
+        include: {
+          card: true
+        }
+      });
+
+      res.status(201).json(newRestaurant);
+    });
   } catch (error) {
     console.error('Erreur lors de la création du restaurant :', error);
     res.status(500).json({ message: 'Erreur lors de la création du restaurant' });
