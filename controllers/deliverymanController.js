@@ -5,7 +5,13 @@ const saltRounds = 10;
 
 exports.getdeliveryman = async (req, res) => {
   try {
-    const deliverymen = await prisma.deliveryMan.findMany();
+    const deliverymen = await prisma.deliveryMan.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
     res.json(deliverymen);
   } catch (error) {
     console.error('Erreur lors de la récupération des livreurs :', error);
@@ -28,8 +34,6 @@ exports.postdeliveryman = async (req, res) => {
       data: { name, password:hash, email } // Ajouter le mot de passe et l'email
     });
 
-
-
     res.status(201).json(newDeliveryman);
   });
   } catch (error) {
@@ -40,10 +44,9 @@ exports.postdeliveryman = async (req, res) => {
 
 exports.putdeliveryman = async (req, res) => {
   try {
-    const { id } = req.params;
     const { name } = req.body;
     const updatedDeliveryman = await prisma.deliveryMan.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(req.deliverymanId) },
       data: { name }
     });
     res.json(updatedDeliveryman);
@@ -55,11 +58,14 @@ exports.putdeliveryman = async (req, res) => {
 
 exports.deletedeliveryman = async (req, res) => {
   try {
-    const { id } = req.params;
-    await prisma.deliveryMan.delete({ where: { id: parseInt(id) } });
+   
+    await prisma.deliveryMan.delete({ where: { id: parseInt(req.deliverymanId) } });
     res.json({ message: 'Livreur supprimé avec succès' });
+
   } catch (error) {
+
     console.error('Erreur lors de la suppression du livreur :', error);
     res.status(500).json({ message: 'Erreur lors de la suppression du livreur' });
+
   }
 };

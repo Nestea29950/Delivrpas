@@ -213,6 +213,45 @@
           }
           }
           }
+          },
+          "/api/login": {
+            "post": {
+              "summary": "Authentification de l'utilisateur",
+              "description": "Authentification de l'utilisateur via email et mot de passe.",
+              "tags": [
+                "Authentification"
+              ],
+              "parameters": [
+                {
+                  "name": "body",
+                  "in": "body",
+                  "description": "Les informations d'identification de l'utilisateur.",
+                  "required": true,
+                  "schema": {
+                    "$ref": "#/definitions/LoginRequest"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Authentification réussie",
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "401": {
+                  "description": "Échec de l'authentification"
+                },
+                "500": {
+                  "description": "Erreur interne du serveur"
+                }
+              }
+            }
           }
           }
           }  

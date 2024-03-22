@@ -30,29 +30,27 @@ exports.getmenus = async (req, res) => {
 };
 
 
-
-
-
 exports.postmenus = async (req, res) => {
   try {
-    // Extraire les données du corps de la requête
-    const { cardId, nom } = req.body;
+    console.log(req.restaurantId);
 
-    // Vérifier si la carte existe dans la base de données
-    const existingCard = await prisma.card.findUnique({
-      where: { id: cardId }
+    // Rechercher la carte en fonction de req.restaurantId
+    const card = await prisma.card.findFirst({
+      where: { restaurantId: req.restaurantId }
     });
 
-    if (!existingCard) {
-      return res.status(404).json({ message: 'La carte spécifiée n\'existe pas' });
+    if (!card) {
+      return res.status(404).json({ message: 'La carte pour ce restaurant n\'existe pas' });
     }
-   
-    // Créer le menu avec les données fournies
+
+    // Extraire les données du corps de la requête
+    const { nom } = req.body;
+
+    // Créer le menu avec les données fournies et la cardId récupérée
     const newMenu = await prisma.menu.create({
       data: {
         nom: nom,
-        card: { connect: { id: cardId } },
-
+        card: { connect: { id: card.id } }
       }
     });
 
@@ -67,6 +65,7 @@ exports.postmenus = async (req, res) => {
 
 
 
+
 exports.putmenus = async (req, res) => {
   try {
     const { id } = req.params; // Identifiant du menu à mettre à jour
@@ -74,11 +73,22 @@ exports.putmenus = async (req, res) => {
 
     // Vérifier si le menu existe dans la base de données
     const existingMenu = await prisma.menu.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(id) },
+      include: { card: true } // Inclure la carte associée au menu
     });
 
     if (!existingMenu) {
       return res.status(404).json({ message: 'Menu non trouvé' });
+    }
+
+    // Rechercher la carte associée au restaurant actuel
+    const card = await prisma.card.findFirst({
+      where: { restaurantId: req.restaurantId }
+    });
+
+    // Vérifier si le menu correspond à la carte du restaurant actuel
+    if (existingMenu.card.restaurantId !== req.restaurantId || existingMenu.card.id !== card.id) {
+      return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier ce menu' });
     }
 
     // Mettre à jour le nom du menu
@@ -101,18 +111,41 @@ exports.putmenus = async (req, res) => {
 
 
 
+
+
 exports.deletemenus = async (req, res) => {
   try {
     let { id } = req.params;
     id = parseInt(id);
+
+    // Vérifier si le menu existe dans la base de données
+    const existingMenu = await prisma.menu.findUnique({
+      where: { id: parseInt(id) },
+      include: { card: true } // Inclure la carte associée au menu
+    });
+
+    if (!existingMenu) {
+      return res.status(404).json({ message: 'Menu non trouvé' });
+    }
+
+    // Rechercher la carte associée au restaurant actuel
+    const card = await prisma.card.findFirst({
+      where: { restaurantId: req.restaurantId }
+    });
+
+    // Vérifier si le menu correspond à la carte du restaurant actuel
+    if (existingMenu.card.restaurantId !== req.restaurantId || existingMenu.card.id !== card.id) {
+      return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à supprimer ce menu' });
+    }
+
+    // Supprimer le menu
     await prisma.menu.delete({
       where: { id }
     });
 
-    res.json({ message: 'menu supprimé avec succès' });
+    res.json({ message: 'Menu supprimé avec succès' });
   } catch (error) {
     console.error('Erreur lors de la suppression du menu :', error);
     res.status(500).json({ message: 'Erreur lors de la suppression du menu' });
   }
 };
-

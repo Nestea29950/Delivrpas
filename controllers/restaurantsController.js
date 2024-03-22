@@ -2,9 +2,19 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const saltRounds = 10; 
+
+
 exports.getRestaurants = async (req, res) => {
   try {
-    const restaurants = await prisma.restaurant.findMany();
+    const restaurants = await prisma.restaurant.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        adressePostal: true,
+        // Ajoutez d'autres champs que vous souhaitez inclure dans la réponse JSON
+      },
+    });
     res.json(restaurants);
   } catch (error) {
     console.error('Erreur lors de la récupération des restaurants :', error);
@@ -14,6 +24,7 @@ exports.getRestaurants = async (req, res) => {
 
 exports.postRestaurants = async (req, res) => {
   try {
+    
     // Extraire les données du corps de la requête
     const { email, password, name, adressePostal } = req.body;
     
@@ -50,16 +61,15 @@ exports.postRestaurants = async (req, res) => {
   }
 };
 
-
-
 exports.putRestaurants = async (req, res) => {
+
+  
   try {
-    const { id } = req.params; // Récupérer l'ID du restaurant à mettre à jour
     const { email, password, name, adressePostal, carte } = req.body; // Extraire les données du corps de la requête
 
     // Vérifier si le restaurant existe dans la base de données
     const existingRestaurant = await prisma.restaurant.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(req.restaurantId) }
     });
 
     if (!existingRestaurant) {
@@ -68,7 +78,7 @@ exports.putRestaurants = async (req, res) => {
 
     // Mettre à jour le restaurant avec les données fournies
     const updatedRestaurant = await prisma.restaurant.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(req.restaurantId) },
       data: {
         email,
         password,
@@ -97,7 +107,7 @@ exports.putRestaurants = async (req, res) => {
 
 exports.deleteRestaurants = async (req, res) => {
   try {
-    let { id } = req.params;
+    let { id } = req.restaurantId;
     id = parseInt(id);
 
     // Supprimer la carte associée au restaurant

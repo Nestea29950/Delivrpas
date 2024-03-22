@@ -1,0 +1,68 @@
+type Customer {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  deliveries: [Delivery!]!
+}
+
+type DeliveryMan {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  deliveries: [Delivery!]!
+}
+
+type Restaurant {
+  id: Int!
+  email: String!
+  password: String!
+  name: String!
+  adressePostal: Int!
+  card: Card
+  deliveries: [Delivery!]!
+}
+
+type Card {
+  id: Int!
+  restaurant: Restaurant!
+  menu: [Menu!]!
+  dish: [Dish!]!
+}
+
+type Menu {
+  id: Int!
+  nom: String!
+  card: Card!
+  dishes: [DishOnMenu!]!
+  orderitem: [OrderItem!]!
+}
+
+type Dish {
+  id: Int!
+  card: Card!
+  nom: String!
+  menus: [DishOnMenu!]!
+  orderitem: [OrderItem!]!
+}
+
+type DishOnMenu {
+  menu: Menu!
+  dish: Dish!
+}
+
+type OrderItem {
+  id: Int!
+  dish: Dish!
+  menu: Menu!
+  delivery: [Delivery!]!
+}
+
+type Delivery {
+  id: Int!
+  deliveryMan: DeliveryMan!
+  customer: Customer!
+  restaurant: Restaurant!
+  orderitem: OrderItem!
+}
