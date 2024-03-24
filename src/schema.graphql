@@ -1,8 +1,10 @@
+
 type Customer {
   id: Int!
   name: String!
   email: String!
   password: String!
+  users: User
   deliveries: [Delivery!]!
 }
 
@@ -11,6 +13,7 @@ type DeliveryMan {
   name: String!
   email: String!
   password: String!
+  users: User
   deliveries: [Delivery!]!
 }
 
@@ -21,7 +24,14 @@ type Restaurant {
   name: String!
   adressePostal: Int!
   card: Card
+  users: User
   deliveries: [Delivery!]!
+}
+
+type User {
+  deliveryMan: DeliveryMan
+  customer: Customer
+  restaurant: Restaurant
 }
 
 type Card {
@@ -66,3 +76,5 @@ type Delivery {
   restaurant: Restaurant!
   orderitem: OrderItem!
 }
+
+

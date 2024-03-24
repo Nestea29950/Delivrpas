@@ -5,7 +5,9 @@
       "title": "API de Delivrpas",
       "description": "Documentation de l'API de gestion Delivrpas"
     },
+    
     "paths": {
+      
       "/api/customers": {
         "get": {
           "summary": "Obtenir tous les clients",
@@ -24,7 +26,7 @@
           }
         }
       },
-      "/api/customers/{id}": {
+      "/api/customers": {
         "put": {
           "summary": "Mettre à jour un client existant",
           "responses": {
@@ -60,7 +62,7 @@
           }
         }
       },
-      "/api/deliveries/{id}": {
+      "/api/deliveries": {
         "delete": {
           "summary": "Supprimer une livraison existante",
           "responses": {
@@ -88,7 +90,7 @@
           }
         }
       },
-      "/api/deliveryman/{id}": {
+      "/api/deliveryman": {
         "put": {
           "summary": "Mettre à jour un livreur existant",
           "responses": {
@@ -196,7 +198,7 @@
           }
           }
           },
-          "/api/restaurants/{id}": {
+          "/api/restaurants": {
           "put": {
           "summary": "Mettre à jour un restaurant existant",
           "responses": {
@@ -214,6 +216,7 @@
           }
           }
           },
+          
           "/api/login": {
             "post": {
               "summary": "Authentification de l'utilisateur",
