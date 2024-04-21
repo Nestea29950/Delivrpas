@@ -5,6 +5,7 @@ const saltRounds = 10;
 
 
 exports.getRestaurants = async (req, res) => {
+  
   try {
     const restaurants = await prisma.restaurant.findMany({
       select: {
@@ -22,11 +23,46 @@ exports.getRestaurants = async (req, res) => {
   }
 };
 
+exports.getRestaurantById = async (req, res) => {
+  try {
+    const { id } = req.params; // Récupérer l'ID du restaurant à partir de l'URL
+
+    // Recherche du restaurant par son ID dans la base de données
+    const restaurant = await prisma.restaurant.findUnique({
+      where: {
+        id: parseInt(id) // Assurez-vous de convertir l'ID en nombre si nécessaire
+      },
+      include: {
+        card: {
+          include: {
+            menu: true,
+            dish: true  // Inclure les menus associés à chaque carte
+          }
+        },
+        users: true, // Si vous voulez inclure les utilisateurs associés au restaurant
+        deliveries: true // Si vous voulez inclure les livraisons associées au restaurant
+        // Ajoutez d'autres champs que vous souhaitez inclure dans la réponse JSON
+      },
+    });
+
+    // Vérifier si le restaurant existe
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant non trouvé' });
+    }
+
+    // Envoyer les détails du restaurant en réponse
+    res.json(restaurant);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du restaurant :', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération du restaurant' });
+  }
+};
+
 exports.postRestaurants = async (req, res) => {
   try {
     
     // Extraire les données du corps de la requête
-    const { email, password, name, adressePostal } = req.body;
+    let { email, password, name, adressePostal } = req.body;
     
     // Générer un sel et hacher le mot de passe
     bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -34,7 +70,7 @@ exports.postRestaurants = async (req, res) => {
         console.error('Erreur lors du hachage du mot de passe :', err);
         throw new Error('Erreur lors du hachage du mot de passe');
       }
-
+      adressePostal = parseInt(adressePostal);
       // Créer le restaurant avec le mot de passe haché
       const newRestaurant = await prisma.restaurant.create({
         data: {

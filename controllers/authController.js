@@ -26,27 +26,25 @@ exports.postLogin = async (req, res) => {
             console.log("Aucun utilisateur trouvé avec cet email.");
             return res.status(401).send({ message: "Authentification échouée" });
         }
+
         const passwordMatch = await bcrypt.compare(password, user.password);
-        if (passwordMatch == true) {
+        if (passwordMatch) {
             const payload = {
                 userId: user.id,
-                userType: customer ? 'customer' : deliveryMan ? 'deliveryMan' : restaurant ? 'restaurant' : null
+                userType: customer ? 'customer' : deliveryMan ? 'deliveryMan' : restaurant ? 'restaurant' : null,
+                userData: user // Ajoutez les données de l'utilisateur dans le payload
             };
         
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); // Utiliser la clé secrète stockée dans une variable d'environnement
         
-            res.status(200).send({ token });
+            res.status(200).send({ token, user }); // Renvoyer le token et les données de l'utilisateur
         } else {
-            // Supprimez cette partie du code
-            console.error("Erreur d'authentification :", error);
-            res.status(500).send({ message: "Erreur interne du serveur" });
+            console.error("Mot de passe incorrect pour l'utilisateur :", user);
+            res.status(401).send({ message: "Mot de passe incorrect" });
         }
         
-
-        
     } catch (error) {
-        console.error("Erreur d'authentification :", error);
+        console.error("Erreur lors de l'authentification :", error);
         res.status(500).send({ message: "Erreur interne du serveur" });
     }
 };
-

@@ -4,6 +4,7 @@ const { makeExecutableSchema, importSchema } = require('@graphql-tools/schema');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
+const cors = require('cors'); // Importez le module cors
 const saltRounds = 10; 
 const restaurantsRoutes = require('./routes/restaurantsRoutes');
 const customersRoutes = require('./routes/customersRoutes');
@@ -14,6 +15,9 @@ const deliverymanRoutes = require('./routes/deliverymanRoutes');
 const authRoutes = require('./routes/authRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json'); // Chemin vers votre fichier de documentation Swagger
+
+
+// Ici j'ai du faire le graphql car impossible de faire des modules impossible d'importer 
 
 
 const typeDefs = `
@@ -594,6 +598,9 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 const app = express();
 const port = 3000;
 
+app.use(cors({
+  origin: '*'
+}));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Endpoint GraphQL
