@@ -35,9 +35,10 @@ exports.postLogin = async (req, res) => {
                 userData: user // Ajoutez les données de l'utilisateur dans le payload
             };
         
-            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); // Utiliser la clé secrète stockée dans une variable d'environnement
-        
-            res.status(200).send({ token, user }); // Renvoyer le token et les données de l'utilisateur
+            // const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); 
+            const token = jwt.sign(payload, process.env.JWT_SECRET);
+
+            res.status(200).send({ token, user , payload }); // Renvoyer le token et les données de l'utilisateur
         } else {
             console.error("Mot de passe incorrect pour l'utilisateur :", user);
             res.status(401).send({ message: "Mot de passe incorrect" });
