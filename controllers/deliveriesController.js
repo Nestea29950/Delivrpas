@@ -54,21 +54,19 @@ exports.postdeliveries = async (req, res) => {
       return res.status(403).json({ message: 'Vous n\'êtes pas autorisé à créer une livraison' });
     }
 
-    const { deliveryManId, restaurantId, orderItemData } = req.body; // Ajoutez orderItems dans le corps de la requête
-
+    const { deliveryManId,customerId, restaurantId, orderItem } = req.body; 
+    
     const newOrderItem = await prisma.orderItem.create({
-      data: {
-        ...orderItemData // Utilisez les données de l'élément de la commande pour créer l'OrderItem
-      }
+      data: {  data:orderItem }
     });
 
     // Créer une nouvelle livraison en utilisant les données reçues et les OrderItems nouvellement créés
     const newDelivery = await prisma.delivery.create({
       data: {
         deliveryMan: { connect: { id: deliveryManId } },
-        customer: { connect: { id: user.id } }, // Utiliser l'ID de l'utilisateur authentifié (client)
+        customer: { connect: { id: customerId } }, // Utiliser l'ID de l'utilisateur authentifié (client)
         restaurant: { connect: { id: restaurantId } },
-        orderitem: { connect: newOrderItems.map(item => ({ id: item.id })) } // Connectez tous les nouveaux OrderItems à la livraison
+        orderitem: { connect: { id: newOrderItem.id } } // Connectez tous les nouveaux OrderItems à la livraison
       },
       include: {
         deliveryMan: true,
